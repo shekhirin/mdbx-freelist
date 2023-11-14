@@ -1,5 +1,5 @@
 pub const SMALL_VALUES_TO_INSERT: usize = 100_000;
-pub const SMALL_VALUE_SIZE: usize = 4 * 1024;
+pub const SMALL_VALUE_SIZE: usize = 2 * 1024;
 pub const DELETE_SMALL_VALUES: bool = false;
 pub const SMALL_VALUES_TO_DELETE: usize = 50_000;
 
