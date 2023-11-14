@@ -1,6 +1,8 @@
 mod config;
 
 use crate::config::*;
+use inc_stats::Percentiles;
+use itertools::Itertools;
 use rand::prelude::*;
 use rand::thread_rng;
 use reth_libmdbx::{
@@ -33,6 +35,7 @@ fn main() -> eyre::Result<()> {
 
     print_stats(&env)?;
     println!("Inserting {SMALL_VALUES_TO_INSERT} records {SMALL_VALUE_SIZE} bytes each...");
+    let mut percentiles = Percentiles::new();
     with_txn(&env, |txn| {
         let dbi = txn.open_db(Some(Table::Data.as_str()))?.dbi();
 
@@ -50,6 +53,8 @@ fn main() -> eyre::Result<()> {
             let elapsed = start.elapsed();
             total_duration += elapsed;
             log_duration += elapsed;
+
+            percentiles.add(elapsed.as_secs_f64());
 
             if key > 0 && key % (SMALL_VALUES_TO_INSERT / 10) == 0 {
                 println!(
@@ -69,7 +74,7 @@ fn main() -> eyre::Result<()> {
             "  Time per put: {:?}",
             total_duration / SMALL_VALUES_TO_INSERT as u32
         );
-
+        print_percentiles(&percentiles);
         Ok(())
     })?;
     println!();
@@ -99,6 +104,7 @@ fn main() -> eyre::Result<()> {
 
     if USE_BALLAST {
         print_stats(&env)?;
+        let mut percentiles = Percentiles::new();
         println!(
             "Inserting {BALLAST_VALUES_TO_INSERT} ballasts {BALLAST_VALUE_SIZE} bytes each..."
         );
@@ -119,6 +125,7 @@ fn main() -> eyre::Result<()> {
                 let elapsed = start.elapsed();
                 total_duration += elapsed;
                 log_duration += elapsed;
+                percentiles.add(elapsed.as_secs_f64());
 
                 if key > 0 && key % (BALLAST_VALUES_TO_INSERT / 10) == 0 {
                     println!(
@@ -138,12 +145,14 @@ fn main() -> eyre::Result<()> {
                 "  Time per put: {:?}",
                 total_duration / BALLAST_VALUES_TO_INSERT as u32
             );
+            print_percentiles(&percentiles);
 
             Ok(())
         })?;
         println!();
 
         print_stats(&env)?;
+        let mut percentiles = Percentiles::new();
         println!("Deleting {BALLAST_VALUES_TO_USE} ballasts {BALLAST_VALUE_SIZE} bytes each...");
         with_txn(&env, |txn| {
             let dbi = txn.open_db(Some(Table::Data.as_str()))?.dbi();
@@ -157,6 +166,7 @@ fn main() -> eyre::Result<()> {
                 let elapsed = start.elapsed();
                 total_duration += elapsed;
                 log_duration += elapsed;
+                percentiles.add(elapsed.as_secs_f64());
 
                 if key > 0 && key % (BALLAST_VALUES_TO_USE / 10) == 0 {
                     println!(
@@ -176,6 +186,7 @@ fn main() -> eyre::Result<()> {
                 "  Time per del: {:?}",
                 total_duration / BALLAST_VALUES_TO_USE as u32
             );
+            print_percentiles(&percentiles);
 
             Ok(())
         })?;
@@ -184,6 +195,7 @@ fn main() -> eyre::Result<()> {
 
     print_stats(&env)?;
     println!("Inserting {LARGE_VALUES_TO_INSERT} records {LARGE_VALUE_SIZE} bytes each...");
+    let mut percentiles = Percentiles::new();
     with_txn(&env, |txn| {
         let dbi = txn.open_db(Some(Table::Data.as_str()))?.dbi();
 
@@ -201,6 +213,7 @@ fn main() -> eyre::Result<()> {
             let elapsed = start.elapsed();
             total_duration += elapsed;
             log_duration += elapsed;
+            percentiles.add(elapsed.as_secs_f64());
 
             if key > 0 && key % (LARGE_VALUES_TO_INSERT / 10) == 0 {
                 println!(
@@ -220,6 +233,7 @@ fn main() -> eyre::Result<()> {
             "  Time per put: {:?}",
             total_duration / LARGE_VALUES_TO_INSERT as u32
         );
+        print_percentiles(&percentiles);
 
         Ok(())
     })?;
@@ -255,6 +269,19 @@ fn print_stats<E: EnvironmentKind>(env: &Environment<E>) -> eyre::Result<()> {
     );
 
     Ok(())
+}
+
+fn print_percentiles(percentiles: &Percentiles<f64>) {
+    println!(
+        "{}",
+        [0.1, 0.25, 0.5, 0.75, 0.9, 0.99, 0.999, 1.0]
+            .iter()
+            .map(|percentile| format!(
+                "{percentile}: {:?}",
+                Duration::from_secs_f64(percentiles.percentile(percentile).unwrap().unwrap())
+            ))
+            .join(", ")
+    );
 }
 
 fn small_value_key(key: usize) -> impl AsRef<[u8]> {
