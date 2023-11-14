@@ -4,8 +4,8 @@ use crate::config::*;
 use rand::prelude::*;
 use rand::thread_rng;
 use reth_libmdbx::{
-    DatabaseFlags, Environment, EnvironmentKind, Geometry, PageSize, Transaction, WriteFlags,
-    WriteMap, RW,
+    DatabaseFlags, Environment, EnvironmentFlags, EnvironmentKind, Geometry, PageSize, Transaction,
+    WriteFlags, WriteMap, RW,
 };
 use std::time::{Duration, Instant};
 use tempfile::tempdir;
@@ -19,6 +19,10 @@ fn main() -> eyre::Result<()> {
             ..Default::default()
         })
         .set_max_dbs(2)
+        .set_flags(EnvironmentFlags {
+            liforeclaim: USE_LIFO,
+            ..Default::default()
+        })
         .open(dir.path())?;
 
     with_txn(&env, |txn| {
@@ -47,7 +51,7 @@ fn main() -> eyre::Result<()> {
             total_duration += elapsed;
             log_duration += elapsed;
 
-            if key % (SMALL_VALUES_TO_INSERT / 10) == 0 {
+            if key > 0 && key % (SMALL_VALUES_TO_INSERT / 10) == 0 {
                 println!(
                     "  {:.1}%, time per put: {:?}",
                     key as f64 / SMALL_VALUES_TO_INSERT as f64 * 100.0,
@@ -116,7 +120,7 @@ fn main() -> eyre::Result<()> {
                 total_duration += elapsed;
                 log_duration += elapsed;
 
-                if key % (BALLAST_VALUES_TO_INSERT / 10) == 0 {
+                if key > 0 && key % (BALLAST_VALUES_TO_INSERT / 10) == 0 {
                     println!(
                         "  {:.1}%, time per put: {:?}",
                         key as f64 / BALLAST_VALUES_TO_INSERT as f64 * 100.0,
@@ -154,7 +158,7 @@ fn main() -> eyre::Result<()> {
                 total_duration += elapsed;
                 log_duration += elapsed;
 
-                if key % (BALLAST_VALUES_TO_USE / 10) == 0 {
+                if key > 0 && key % (BALLAST_VALUES_TO_USE / 10) == 0 {
                     println!(
                         "  {:.1}%, time per del: {:?}",
                         key as f64 / BALLAST_VALUES_TO_USE as f64 * 100.0,
@@ -198,7 +202,7 @@ fn main() -> eyre::Result<()> {
             total_duration += elapsed;
             log_duration += elapsed;
 
-            if key % (LARGE_VALUES_TO_INSERT / 10) == 0 {
+            if key > 0 && key % (LARGE_VALUES_TO_INSERT / 10) == 0 {
                 println!(
                     "  {:.1}%, time per put: {:?}",
                     key as f64 / LARGE_VALUES_TO_INSERT as f64 * 100.0,
