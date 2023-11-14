@@ -18,6 +18,10 @@ fn main() -> eyre::Result<()> {
             page_size: Some(PageSize::Set(4 * 1024)),                    // 4KB
             ..Default::default()
         })
+        .set_flags(reth_libmdbx::EnvironmentFlags {
+            liforeclaim: true,
+            ..Default::default()
+        })
         .set_max_dbs(2)
         .open(dir.path())?;
 

@@ -1,12 +1,12 @@
 pub const SMALL_VALUES_TO_INSERT: usize = 100_000;
 pub const SMALL_VALUE_SIZE: usize = 2 * 1024;
-pub const DELETE_SMALL_VALUES: bool = false;
+pub const DELETE_SMALL_VALUES: bool = true;
 pub const SMALL_VALUES_TO_DELETE: usize = 50_000;
 
 pub const LARGE_VALUES_TO_INSERT: usize = 10_000;
 pub const LARGE_VALUE_SIZE: usize = 200 * 1024;
 
-pub const USE_BALLAST: bool = false;
+pub const USE_BALLAST: bool = true;
 pub const BALLAST_VALUES_TO_INSERT: usize = 20_000;
 pub const BALLAST_VALUES_TO_USE: usize = 10_000;
 pub const BALLAST_VALUE_SIZE: usize = 300 * 1024;
