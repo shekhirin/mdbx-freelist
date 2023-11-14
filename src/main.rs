@@ -16,8 +16,8 @@ fn main() -> eyre::Result<()> {
     let dir = tempdir()?;
     let env = Environment::<WriteMap>::new()
         .set_geometry(Geometry {
-            size: Some(5 * 1024 * 1024 * 1024..10 * 1024 * 1024 * 1024), // min 5GB, max 10GB
-            page_size: Some(PageSize::Set(4 * 1024)),                    // 4KB
+            size: Some(0..50 * 1024 * 1024 * 1024),   // max 50GB
+            page_size: Some(PageSize::Set(4 * 1024)), // 4KB
             ..Default::default()
         })
         .set_max_dbs(2)

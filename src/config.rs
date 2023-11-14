@@ -1,10 +1,10 @@
 pub const USE_LIFO: bool = true;
 pub const DELETE_SMALL_VALUES: bool = true;
-pub const USE_BALLAST: bool = false;
+pub const USE_BALLAST: bool = true;
 
-pub const SMALL_VALUES_TO_INSERT: usize = 1_000_000;
+pub const SMALL_VALUES_TO_INSERT: usize = 5_000_000;
 pub const SMALL_VALUE_SIZE: usize = 2 * 1024;
-pub const SMALL_VALUES_TO_DELETE: usize = 700_000;
+pub const SMALL_VALUES_TO_DELETE: usize = 4_000_000;
 
 pub const LARGE_VALUES_TO_INSERT: usize = 1_000;
 pub const LARGE_VALUE_SIZE: usize = 300 * 1024;
