@@ -115,7 +115,7 @@ fn main() -> eyre::Result<()> {
             "Inserting {BALLAST_VALUES_TO_INSERT} ballasts {BALLAST_VALUE_SIZE} bytes each..."
         );
         with_txn(&env, |txn| {
-            let dbi = txn.open_db(Some(Table::Data.as_str()))?.dbi();
+            let dbi = txn.open_db(Some(Table::Ballast.as_str()))?.dbi();
 
             let mut total_duration = Duration::default();
             let mut log_duration = Duration::default();
@@ -161,7 +161,7 @@ fn main() -> eyre::Result<()> {
         let mut percentiles = Percentiles::new();
         println!("Deleting {BALLAST_VALUES_TO_USE} ballasts {BALLAST_VALUE_SIZE} bytes each...");
         with_txn(&env, |txn| {
-            let dbi = txn.open_db(Some(Table::Data.as_str()))?.dbi();
+            let dbi = txn.open_db(Some(Table::Ballast.as_str()))?.dbi();
 
             let mut total_duration = Duration::default();
             let mut log_duration = Duration::default();

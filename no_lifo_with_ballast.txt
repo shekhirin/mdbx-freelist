@@ -3,47 +3,47 @@ Copying original database...
 
 Freelist: 4091320, Depth: 5, Branch Pages: 419, Leaf Pages: 22142, Overflow Pages: 1000000, Entries: 1000002
 Inserting 20000 ballasts 307200 bytes each...
-  10.0%, time per put: 1.433606ms
-  20.0%, time per put: 1.001586ms
-  30.0%, time per put: 978.105µs
-  40.0%, time per put: 1.269377ms
-  50.0%, time per put: 1.685459ms
-  60.0%, time per put: 1.772048ms
-  70.0%, time per put: 1.53976ms
-  80.0%, time per put: 1.604891ms
-  90.0%, time per put: 1.805696ms
-  100.0%, time per put: 1.736474ms
-  Time per put: 1.4827ms
-0.1: 544.625µs, 0.25: 598.782µs, 0.5: 1.243729ms, 0.75: 1.616083ms, 0.9: 1.955254ms, 0.99: 4.310298ms, 0.999: 13.088502ms, 1: 1.440168333s
+  10.0%, time per put: 1.977274ms
+  20.0%, time per put: 1.071085ms
+  30.0%, time per put: 1.000802ms
+  40.0%, time per put: 1.26178ms
+  50.0%, time per put: 1.471925ms
+  60.0%, time per put: 1.569121ms
+  70.0%, time per put: 1.214215ms
+  80.0%, time per put: 1.106741ms
+  90.0%, time per put: 754.532µs
+  100.0%, time per put: 1.58138ms
+  Time per put: 1.300885ms
+0.1: 539.209µs, 0.25: 576.125µs, 0.5: 656.75µs, 0.75: 1.166781ms, 0.9: 1.57793ms, 0.99: 3.175864ms, 0.999: 10.013245ms, 1: 2.758196334s
 
-Freelist: 4091077, Depth: 5, Branch Pages: 421, Leaf Pages: 22384, Overflow Pages: 2520000, Entries: 1020002
+Freelist: 4091077, Depth: 8, Branch Pages: 422, Leaf Pages: 22383, Overflow Pages: 2520000, Entries: 1020002
 Deleting 10000 ballasts 307200 bytes each...
-  10.0%, time per del: 135.563µs
-  20.0%, time per del: 125.689µs
-  30.0%, time per del: 123.816µs
-  40.0%, time per del: 95.819µs
-  50.0%, time per del: 92.513µs
-  60.0%, time per del: 82.898µs
-  70.0%, time per del: 39.969µs
-  80.0%, time per del: 1.45µs
-  90.0%, time per del: 1.588µs
-  100.0%, time per del: 1.414µs
-  Time per del: 70.072µs
-0.1: 1.25µs, 0.25: 1.375µs, 0.5: 96.146µs, 0.75: 120.594µs, 0.9: 139.921µs, 0.99: 249.899µs, 0.999: 1.592832ms, 1: 5.015417ms
+  10.0%, time per del: 134.306µs
+  20.0%, time per del: 111.881µs
+  30.0%, time per del: 134.263µs
+  40.0%, time per del: 117.661µs
+  50.0%, time per del: 91.124µs
+  60.0%, time per del: 134.321µs
+  70.0%, time per del: 132.594µs
+  80.0%, time per del: 62.933µs
+  90.0%, time per del: 1.44µs
+  100.0%, time per del: 1.539µs
+  Time per del: 92.206µs
+0.1: 1.291µs, 0.25: 1.625µs, 0.5: 106.292µs, 0.75: 136.417µs, 0.9: 162.087µs, 0.99: 259.708µs, 0.999: 1.78378ms, 1: 5.998833ms
 
-Freelist: 4850326, Depth: 5, Branch Pages: 421, Leaf Pages: 22384, Overflow Pages: 1760000, Entries: 1010002
+Freelist: 4850326, Depth: 8, Branch Pages: 422, Leaf Pages: 22383, Overflow Pages: 1760000, Entries: 1010002
 Inserting 1000 records 307200 bytes each...
-  10.0%, time per put: 20.225596ms
-  20.0%, time per put: 1.658028ms
-  30.0%, time per put: 1.616622ms
-  40.0%, time per put: 1.58203ms
-  50.0%, time per put: 1.56089ms
-  60.0%, time per put: 2.032706ms
-  70.0%, time per put: 2.868765ms
-  80.0%, time per put: 1.801763ms
-  90.0%, time per put: 1.876357ms
-  100.0%, time per put: 1.668048ms
-  Time per put: 3.689081ms
-0.1: 1.371337ms, 0.25: 1.412281ms, 0.5: 1.494083ms, 0.75: 1.65577ms, 0.9: 2.36393ms, 0.99: 7.91153ms, 0.999: 21.369881ms, 1: 1.867986834s
+  10.0%, time per put: 19.917916ms
+  20.0%, time per put: 1.68724ms
+  30.0%, time per put: 1.856821ms
+  40.0%, time per put: 1.494455ms
+  50.0%, time per put: 1.466431ms
+  60.0%, time per put: 1.632342ms
+  70.0%, time per put: 1.894119ms
+  80.0%, time per put: 1.873354ms
+  90.0%, time per put: 2.008432ms
+  100.0%, time per put: 2.039214ms
+  Time per put: 3.587033ms
+0.1: 1.360184ms, 0.25: 1.404489ms, 0.5: 1.550813ms, 0.75: 1.77452ms, 0.9: 2.300408ms, 0.99: 6.018152ms, 0.999: 9.670894ms, 1: 1.823874041s
 
-Freelist: 4774390, Depth: 5, Branch Pages: 421, Leaf Pages: 22394, Overflow Pages: 1836000, Entries: 1011002
+Freelist: 4774390, Depth: 8, Branch Pages: 422, Leaf Pages: 22393, Overflow Pages: 1836000, Entries: 1011002
