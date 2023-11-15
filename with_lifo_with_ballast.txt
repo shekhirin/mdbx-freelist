@@ -2,48 +2,62 @@ USE_LIFO = true, USE_BALLAST = true
 Copying original database...
 
 Freelist: 4091320, Depth: 5, Branch Pages: 419, Leaf Pages: 22142, Overflow Pages: 1000000, Entries: 1000002
-Inserting 20000 ballasts 307200 bytes each...
-  10.0%, time per put: 4.244129ms
-  20.0%, time per put: 3.000112ms
-  30.0%, time per put: 2.945761ms
-  40.0%, time per put: 3.585998ms
-  50.0%, time per put: 2.832221ms
-  60.0%, time per put: 3.349783ms
-  70.0%, time per put: 3.583422ms
-  80.0%, time per put: 3.746375ms
-  90.0%, time per put: 3.817136ms
-  100.0%, time per put: 3.723159ms
-  Time per put: 3.48281ms
-0.1: 2.349117ms, 0.25: 2.518698ms, 0.5: 2.840854ms, 0.75: 3.225667ms, 0.9: 3.695ms, 0.99: 6.689432ms, 0.999: 13.231409ms, 1: 3.587460667s
+Inserting 100 ballasts 307200 bytes each...
+  10.0%
+    Put: "0.5: 2.317541ms, 0.9: 6.841083ms, 1: 3.695644083s"
+  20.0%
+    Put: "0.5: 3.099792ms, 0.9: 5.392375ms, 1: 5.627125ms"
+  30.0%
+    Put: "0.5: 2.591334ms, 0.9: 4.173458ms, 1: 6.180084ms"
+  40.0%
+    Put: "0.5: 2.3635ms, 0.9: 8.465333ms, 1: 9.432833ms"
+  50.0%
+    Put: "0.5: 2.278438ms, 0.9: 2.513054ms, 1: 3.055042ms"
+  60.0%
+    Put: "0.5: 2.523938ms, 0.9: 2.98292ms, 1: 3.483583ms"
+  70.0%
+    Put: "0.5: 2.300437ms, 0.9: 2.428916ms, 1: 2.431916ms"
+  80.0%
+    Put: "0.5: 2.170646ms, 0.9: 2.219391ms, 1: 2.439292ms"
+  90.0%
+    Put: "0.5: 2.262209ms, 0.9: 2.442734ms, 1: 3.013334ms"
+  100.0%
+    Put: "0.5: 2.19325ms, 0.9: 2.279075ms, 1: 2.396041ms"
+  Put: "0.5: 2.318812ms, 0.9: 3.449158ms, 1: 3.695644083s"
 
-Freelist: 4091057, Depth: 8, Branch Pages: 422, Leaf Pages: 22383, Overflow Pages: 2520000, Entries: 1020002
-Deleting 10000 ballasts 307200 bytes each...
-  10.0%, time per del: 153.165µs
-  20.0%, time per del: 122.581µs
-  30.0%, time per del: 87.539µs
-  40.0%, time per del: 113.973µs
-  50.0%, time per del: 34.407µs
-  60.0%, time per del: 1.341µs
-  70.0%, time per del: 1.355µs
-  80.0%, time per del: 1.429µs
-  90.0%, time per del: 1.397µs
-  100.0%, time per del: 1.365µs
-  Time per del: 51.855µs
-0.1: 1.125µs, 0.25: 1.208µs, 0.5: 1.417µs, 0.75: 115.188µs, 0.9: 141.333µs, 0.99: 189.21µs, 0.999: 448.554µs, 1: 6.182584ms
+Freelist: 4091299, Depth: 6, Branch Pages: 419, Leaf Pages: 22143, Overflow Pages: 1007600, Entries: 1000102
+Inserting 100 records 307200 bytes each with ballasts deletion...
+  10.0%
+    Put: "0.5: 56.564958ms, 0.9: 61.35025ms, 1: 62.030666ms"
+    Del: "0.5: 56.729833ms, 0.9: 59.469375ms, 1: 60.165791ms"
+  20.0%
+    Put: "0.5: 6.52402ms, 0.9: 7.529692ms, 1: 9.497166ms"
+    Del: "0.5: 6.310355ms, 0.9: 8.073999ms, 1: 8.836375ms"
+  30.0%
+    Put: "0.5: 8.968125ms, 0.9: 10.673837ms, 1: 12.638125ms"
+    Del: "0.5: 7.290625ms, 0.9: 9.36405ms, 1: 9.507ms"
+  40.0%
+    Put: "0.5: 10.487084ms, 0.9: 11.068759ms, 1: 11.134834ms"
+    Del: "0.5: 10.261938ms, 0.9: 11.18935ms, 1: 15.75325ms"
+  50.0%
+    Put: "0.5: 6.243417ms, 0.9: 9.929866ms, 1: 10.933667ms"
+    Del: "0.5: 6.38648ms, 0.9: 10.611842ms, 1: 12.088291ms"
+  60.0%
+    Put: "0.5: 5.947792ms, 0.9: 7.249937ms, 1: 8.01775ms"
+    Del: "0.5: 5.851542ms, 0.9: 8.65565ms, 1: 12.575ms"
+  70.0%
+    Put: "0.5: 5.875959ms, 0.9: 7.003391ms, 1: 7.865666ms"
+    Del: "0.5: 5.045271ms, 0.9: 6.017408ms, 1: 6.753459ms"
+  80.0%
+    Put: "0.5: 5.307605ms, 0.9: 7.610817ms, 1: 7.725791ms"
+    Del: "0.5: 5.040333ms, 0.9: 6.027316ms, 1: 7.847416ms"
+  90.0%
+    Put: "0.5: 5.075292ms, 0.9: 6.2916ms, 1: 8.94225ms"
+    Del: "0.5: 4.670729ms, 0.9: 6.670654ms, 1: 7.305041ms"
+  100.0%
+    Put: "0.5: 6.819042ms, 0.9: 2.763674s, 1: 13.7845555s"
+    Del: "0.5: 5.315667ms, 0.9: 8.706433ms, 1: 9.016666ms"
+  Put: "0.5: 6.769249ms, 0.9: 56.213491ms, 1: 13.7845555s"
+  Del: "0.5: 6.487751ms, 0.9: 55.694004ms, 1: 60.165791ms"
 
-Freelist: 4850305, Depth: 8, Branch Pages: 422, Leaf Pages: 22383, Overflow Pages: 1760000, Entries: 1010002
-Inserting 1000 records 307200 bytes each...
-  10.0%, time per put: 813.652µs
-  20.0%, time per put: 542.287µs
-  30.0%, time per put: 812.859µs
-  40.0%, time per put: 565.432µs
-  50.0%, time per put: 682.602µs
-  60.0%, time per put: 799.574µs
-  70.0%, time per put: 549.535µs
-  80.0%, time per put: 730.541µs
-  90.0%, time per put: 732.427µs
-  100.0%, time per put: 692.908µs
-  Time per put: 692.182µs
-0.1: 338.466µs, 0.25: 491.781µs, 0.5: 608.688µs, 0.75: 754.229µs, 0.9: 879.417µs, 0.99: 1.225952ms, 0.999: 15.873795ms, 1: 16.792417ms
-
-Freelist: 4774369, Depth: 8, Branch Pages: 422, Leaf Pages: 22393, Overflow Pages: 1836000, Entries: 1011002
+Freelist: 4091298, Depth: 5, Branch Pages: 419, Leaf Pages: 22143, Overflow Pages: 1007600, Entries: 1000102

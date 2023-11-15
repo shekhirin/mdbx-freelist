@@ -2,18 +2,27 @@ USE_LIFO = true, USE_BALLAST = false
 Copying original database...
 
 Freelist: 4091320, Depth: 5, Branch Pages: 419, Leaf Pages: 22142, Overflow Pages: 1000000, Entries: 1000002
-Inserting 1000 records 307200 bytes each...
-  10.0%, time per put: 22.16611ms
-  20.0%, time per put: 2.412036ms
-  30.0%, time per put: 2.162827ms
-  40.0%, time per put: 2.306587ms
-  50.0%, time per put: 2.212833ms
-  60.0%, time per put: 2.4247ms
-  70.0%, time per put: 2.476474ms
-  80.0%, time per put: 2.526095ms
-  90.0%, time per put: 2.522846ms
-  100.0%, time per put: 2.329519ms
-  Time per put: 4.354003ms
-0.1: 2.097208ms, 0.25: 2.124177ms, 0.5: 2.195959ms, 0.75: 2.330521ms, 0.9: 2.562479ms, 0.99: 6.761279ms, 0.999: 13.86915ms, 1: 1.967896542s
+Inserting 100 records 307200 bytes each...
+  10.0%
+    Put: "0.5: 1.156553708s, 0.9: 13.547219666s, 1: 13.562532s"
+  20.0%
+    Put: "0.5: 1.03757825s, 0.9: 2.314678046s, 1: 13.396351458s"
+  30.0%
+    Put: "0.5: 1.024964334s, 0.9: 1.034100592s, 1: 1.057419667s"
+  40.0%
+    Put: "0.5: 1.024894625s, 0.9: 1.047091484s, 1: 1.051310834s"
+  50.0%
+    Put: "0.5: 1.026366938s, 0.9: 2.229429575s, 1: 12.944446625s"
+  60.0%
+    Put: "0.5: 1.02256902s, 0.9: 2.383590029s, 1: 12.963968542s"
+  70.0%
+    Put: "0.5: 1.031901687s, 0.9: 2.334945466s, 1: 13.523005667s"
+  80.0%
+    Put: "0.5: 1.064849896s, 0.9: 1.081611596s, 1: 1.085689459s"
+  90.0%
+    Put: "0.5: 1.056398521s, 0.9: 1.116127146s, 1: 1.224404083s"
+  100.0%
+    Put: "0.5: 1.138326709s, 0.9: 3.660101967s, 1: 13.2849725s"
+  Put: "0.5: 1.038737021s, 0.9: 1.227352108s, 1: 13.562532s"
 
-Freelist: 4091288, Depth: 5, Branch Pages: 419, Leaf Pages: 22152, Overflow Pages: 1076000, Entries: 1001002
+Freelist: 4091298, Depth: 5, Branch Pages: 419, Leaf Pages: 22143, Overflow Pages: 1007600, Entries: 1000102
