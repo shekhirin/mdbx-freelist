@@ -12,3 +12,12 @@ eyre = "0.6.8"
 rand = "0.8.5"
 stats-cli = "3.0.1"
 itertools = "0.11.0"
+
+#[patch."https://github.com/paradigmxyz/reth"]
+#reth-libmdbx = { path = "../reth/crates/storage/libmdbx-rs" }
+
+[profile.maxperf]
+inherits = "release"
+lto = "fat"
+codegen-units = 1
+incremental = false

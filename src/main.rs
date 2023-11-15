@@ -9,77 +9,70 @@ use reth_libmdbx::{
     DatabaseFlags, Environment, EnvironmentFlags, EnvironmentKind, Geometry, PageSize, Transaction,
     WriteFlags, WriteMap, RW,
 };
+use std::path::Path;
 use std::time::{Duration, Instant};
 use tempfile::tempdir;
 
 fn main() -> eyre::Result<()> {
-    let dir = tempdir()?;
-    let env = Environment::<WriteMap>::new()
-        .set_geometry(Geometry {
-            size: Some(0..50 * 1024 * 1024 * 1024),   // max 50GB
-            page_size: Some(PageSize::Set(4 * 1024)), // 4KB
-            ..Default::default()
-        })
-        .set_max_dbs(2)
-        .set_flags(EnvironmentFlags {
-            liforeclaim: USE_LIFO,
-            ..Default::default()
-        })
-        .open(dir.path())?;
+    print_config();
 
-    with_txn(&env, |txn| {
-        txn.create_db(Some(Table::Data.as_str()), DatabaseFlags::empty())?;
-        txn.create_db(Some(Table::Ballast.as_str()), DatabaseFlags::empty())?;
-        Ok(())
-    })?;
+    let original_db_path = Path::new("db");
+    if !original_db_path.exists() {
+        println!("Creating original database...");
+        let env = create_env(original_db_path)?;
+        with_txn(&env, |txn| {
+            txn.create_db(Some(Table::Data.as_str()), DatabaseFlags::empty())?;
+            txn.create_db(Some(Table::Ballast.as_str()), DatabaseFlags::empty())?;
+            Ok(())
+        })?;
+        println!();
 
-    print_stats(&env)?;
-    println!("Inserting {SMALL_VALUES_TO_INSERT} records {SMALL_VALUE_SIZE} bytes each...");
-    let mut percentiles = Percentiles::new();
-    with_txn(&env, |txn| {
-        let dbi = txn.open_db(Some(Table::Data.as_str()))?.dbi();
+        print_stats(&env)?;
+        println!("Inserting {SMALL_VALUES_TO_INSERT} records {SMALL_VALUE_SIZE} bytes each...");
+        let mut percentiles = Percentiles::new();
+        with_txn(&env, |txn| {
+            let dbi = txn.open_db(Some(Table::Data.as_str()))?.dbi();
 
-        let mut total_duration = Duration::default();
-        let mut log_duration = Duration::default();
+            let mut total_duration = Duration::default();
+            let mut log_duration = Duration::default();
 
-        for key in 0..SMALL_VALUES_TO_INSERT {
-            let start = Instant::now();
-            txn.put(
-                dbi,
-                small_value_key(key),
-                [0; SMALL_VALUE_SIZE],
-                WriteFlags::empty(),
-            )?;
-            let elapsed = start.elapsed();
-            total_duration += elapsed;
-            log_duration += elapsed;
+            for key in 0..SMALL_VALUES_TO_INSERT {
+                let start = Instant::now();
+                txn.put(
+                    dbi,
+                    small_value_key(key),
+                    [0; SMALL_VALUE_SIZE],
+                    WriteFlags::empty(),
+                )?;
+                let elapsed = start.elapsed();
+                total_duration += elapsed;
+                log_duration += elapsed;
 
-            percentiles.add(elapsed.as_secs_f64());
+                percentiles.add(elapsed.as_secs_f64());
 
-            if key > 0 && key % (SMALL_VALUES_TO_INSERT / 10) == 0 {
-                println!(
-                    "  {:.1}%, time per put: {:?}",
-                    key as f64 / SMALL_VALUES_TO_INSERT as f64 * 100.0,
-                    log_duration / (SMALL_VALUES_TO_INSERT / 10) as u32
-                );
-                log_duration = Duration::default();
+                if key > 0 && key % (SMALL_VALUES_TO_INSERT / 10) == 0 {
+                    println!(
+                        "  {:.1}%, time per put: {:?}",
+                        key as f64 / SMALL_VALUES_TO_INSERT as f64 * 100.0,
+                        log_duration / (SMALL_VALUES_TO_INSERT / 10) as u32
+                    );
+                    log_duration = Duration::default();
+                }
             }
-        }
 
-        println!(
-            "  100.0%, time per put: {:?}",
-            log_duration / (SMALL_VALUES_TO_INSERT / 10) as u32
-        );
-        println!(
-            "  Time per put: {:?}",
-            total_duration / SMALL_VALUES_TO_INSERT as u32
-        );
-        print_percentiles(&percentiles);
-        Ok(())
-    })?;
-    println!();
+            println!(
+                "  100.0%, time per put: {:?}",
+                log_duration / (SMALL_VALUES_TO_INSERT / 10) as u32
+            );
+            println!(
+                "  Time per put: {:?}",
+                total_duration / SMALL_VALUES_TO_INSERT as u32
+            );
+            print_percentiles(&percentiles);
+            Ok(())
+        })?;
+        println!();
 
-    if DELETE_SMALL_VALUES {
         print_stats(&env)?;
         println!("Deleting {SMALL_VALUES_TO_DELETE} records {SMALL_VALUE_SIZE} bytes each...");
         let mut keys: Vec<_> = (0..SMALL_VALUES_TO_INSERT).collect();
@@ -101,6 +94,19 @@ fn main() -> eyre::Result<()> {
         })?;
         println!();
     }
+
+    let dir = tempdir()?;
+
+    println!("Copying original database...");
+    for entry in std::fs::read_dir(original_db_path)? {
+        let entry = entry?;
+        assert!(entry.file_type()?.is_file());
+        let file = entry.path();
+        std::fs::copy(&file, dir.path().join(file.as_path().file_name().unwrap()))?;
+    }
+    println!();
+
+    let env = create_env(dir.path())?;
 
     if USE_BALLAST {
         print_stats(&env)?;
@@ -242,6 +248,21 @@ fn main() -> eyre::Result<()> {
     print_stats(&env)?;
 
     Ok(())
+}
+
+fn create_env(path: impl AsRef<Path>) -> eyre::Result<Environment<WriteMap>> {
+    Ok(Environment::<WriteMap>::builder()
+        .set_geometry(Geometry {
+            size: Some(0..50 * 1024 * 1024 * 1024),   // max 50GB
+            page_size: Some(PageSize::Set(4 * 1024)), // 4KB
+            ..Default::default()
+        })
+        .set_max_dbs(2)
+        .set_flags(EnvironmentFlags {
+            liforeclaim: USE_LIFO,
+            ..Default::default()
+        })
+        .open(path.as_ref())?)
 }
 
 fn with_txn(
