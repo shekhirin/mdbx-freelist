@@ -3,7 +3,7 @@ mod db;
 mod duration;
 
 use crate::config::*;
-use crate::db::{ballast_key, create_env, create_original_db, large_value_key, with_txn, Table};
+use crate::db::{create_env, create_original_db, with_txn, Table};
 use crate::duration::Durations;
 use reth_libmdbx::{Environment, WriteFlags};
 use std::borrow::Cow;
@@ -24,8 +24,7 @@ fn main() -> eyre::Result<()> {
     for entry in std::fs::read_dir(original_db_path)? {
         let entry = entry?;
         assert!(entry.file_type()?.is_file());
-        let file = entry.path();
-        std::fs::copy(&file, dir.path().join(file.as_path().file_name().unwrap()))?;
+        std::fs::copy(entry.path(), dir.path().join(entry.file_name()))?;
     }
     println!();
 
@@ -34,27 +33,22 @@ fn main() -> eyre::Result<()> {
     if USE_BALLAST {
         print_stats(&env)?;
         let mut durations = Durations::default();
-        println!(
-            "Inserting {BALLAST_VALUES_TO_INSERT} ballasts {BALLAST_VALUE_SIZE} bytes each..."
-        );
+        println!("Appending {BALLASTS_TO_INSERT} ballasts {BALLAST_SIZE} bytes each...");
         with_txn(&env, |txn| {
             let dbi = txn.open_db(Some(Table::Ballast.as_str()))?.dbi();
 
-            for key in 0..BALLAST_VALUES_TO_INSERT {
+            for key in 0..BALLASTS_TO_INSERT {
                 durations.measure_put(|| {
                     txn.put(
                         dbi,
-                        ballast_key(key),
-                        [0; BALLAST_VALUE_SIZE],
-                        WriteFlags::empty(),
+                        key.to_be_bytes(),
+                        [0; BALLAST_SIZE],
+                        WriteFlags::APPEND,
                     )
                 })?;
 
-                if key > 0 && key % (BALLAST_VALUES_TO_INSERT / 10) == 0 {
-                    println!(
-                        "  {:.1}%",
-                        key as f64 / BALLAST_VALUES_TO_INSERT as f64 * 100.0
-                    );
+                if key > 0 && key % (BALLASTS_TO_INSERT / 10) == 0 {
+                    println!("  {:.1}%", key as f64 / BALLASTS_TO_INSERT as f64 * 100.0);
                     println!("    Put: {:?}", durations.finish_put_run());
                 }
             }
@@ -70,7 +64,7 @@ fn main() -> eyre::Result<()> {
 
     print_stats(&env)?;
     println!(
-        "Inserting {LARGE_VALUES_TO_INSERT} records {LARGE_VALUE_SIZE} bytes each{}...",
+        "Appending {LARGE_VALUES_TO_INSERT} large records {LARGE_VALUE_SIZE} bytes each{}...",
         if USE_BALLAST {
             " with ballasts deletion"
         } else {
@@ -86,10 +80,8 @@ fn main() -> eyre::Result<()> {
 
                     let mut ballast_cursor = txn.cursor_with_dbi(dbi)?;
                     assert!(ballast_cursor
-                        .set_range::<Cow<'_, [u8]>, [u8; BALLAST_VALUE_SIZE]>(
-                            ballast_key(0).as_ref()
-                        )?
-                        .map_or(false, |(key, _)| key.starts_with(b"ballast")));
+                        .next::<Cow<'_, [u8]>, [u8; BALLAST_SIZE]>()?
+                        .is_some());
                     ballast_cursor.del(WriteFlags::CURRENT)?;
 
                     Ok(())
@@ -99,13 +91,13 @@ fn main() -> eyre::Result<()> {
 
         durations.measure_put(|| {
             with_txn(&env, |txn| {
-                let dbi = txn.open_db(Some(Table::Data.as_str()))?.dbi();
+                let dbi = txn.open_db(Some(Table::Large.as_str()))?.dbi();
 
                 txn.put(
                     dbi,
-                    large_value_key(key),
+                    key.to_be_bytes(),
                     [0; LARGE_VALUE_SIZE],
-                    WriteFlags::empty(),
+                    WriteFlags::APPEND,
                 )?;
 
                 Ok(())
