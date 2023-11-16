@@ -3,8 +3,7 @@ use crate::duration::Durations;
 use crate::print_stats;
 use rand::prelude::*;
 use reth_libmdbx::{
-    DatabaseFlags, Environment, EnvironmentFlags, Geometry, PageSize, Transaction, WriteFlags,
-    WriteMap, RW,
+    DatabaseFlags, Environment, EnvironmentFlags, Geometry, PageSize, Transaction, WriteFlags, RW,
 };
 use std::path::Path;
 
@@ -74,8 +73,8 @@ pub fn create_original_db(path: &Path) -> eyre::Result<()> {
     Ok(())
 }
 
-pub fn create_env(path: impl AsRef<Path>) -> eyre::Result<Environment<WriteMap>> {
-    Ok(Environment::<WriteMap>::builder()
+pub fn create_env(path: impl AsRef<Path>) -> eyre::Result<Environment> {
+    Ok(Environment::builder()
         .set_geometry(Geometry {
             size: Some(0..50 * 1024 * 1024 * 1024),   // max 50GB
             page_size: Some(PageSize::Set(4 * 1024)), // 4KB
@@ -90,8 +89,8 @@ pub fn create_env(path: impl AsRef<Path>) -> eyre::Result<Environment<WriteMap>>
 }
 
 pub fn with_txn(
-    env: &Environment<WriteMap>,
-    f: impl FnOnce(&Transaction<RW, WriteMap>) -> eyre::Result<()>,
+    env: &Environment,
+    f: impl FnOnce(&Transaction<RW>) -> eyre::Result<()>,
 ) -> eyre::Result<()> {
     let txn = env.begin_rw_txn()?;
     f(&txn)?;

@@ -5,7 +5,7 @@ mod duration;
 use crate::config::*;
 use crate::db::{ballast_key, create_env, create_original_db, large_value_key, with_txn, Table};
 use crate::duration::Durations;
-use reth_libmdbx::{Environment, EnvironmentKind, WriteFlags};
+use reth_libmdbx::{Environment, WriteFlags};
 use std::borrow::Cow;
 use std::path::Path;
 use tempfile::tempdir;
@@ -140,7 +140,7 @@ fn main() -> eyre::Result<()> {
     Ok(())
 }
 
-fn print_stats<E: EnvironmentKind>(env: &Environment<E>) -> eyre::Result<()> {
+fn print_stats(env: &Environment) -> eyre::Result<()> {
     let freelist = env.freelist()?;
     let stat = env.stat()?;
     println!(
