@@ -25,14 +25,13 @@ pub fn create_original_db(path: &Path) -> eyre::Result<()> {
     let mut durations = Durations::default();
     with_txn(&env, |txn| {
         let dbi = txn.open_db(Some(Table::Small.as_str()))?.dbi();
-
         for key in 0..SMALL_VALUES_TO_INSERT {
             durations.measure_put(|| {
                 txn.put(
                     dbi,
-                    key.to_be_bytes(),
+                    format!("small-{}", key).as_bytes(),
                     [0; SMALL_VALUE_SIZE],
-                    WriteFlags::APPEND,
+                    WriteFlags::empty(),
                 )
             })?;
 
@@ -57,25 +56,18 @@ pub fn create_original_db(path: &Path) -> eyre::Result<()> {
     keys.shuffle(&mut thread_rng());
     let mut keys = keys[..SMALL_VALUES_TO_DELETE].to_vec();
     keys.sort();
-    with_txn(&env, |txn| {
-        let dbi = txn.open_db(Some(Table::Small.as_str()))?.dbi();
-        let mut cursor = txn.cursor_with_dbi(dbi)?;
 
-        for (i, key) in keys.iter().enumerate() {
-            assert!(cursor
-                .set::<[u8; SMALL_VALUE_SIZE]>(key.to_be_bytes().as_ref())?
-                .is_some());
-            cursor.del(WriteFlags::CURRENT)?;
+    for key_chunk in keys.chunks(10_000) {
+        with_txn(&env, |txn| {
+            let dbi = txn.open_db(Some(Table::Small.as_str()))?.dbi();
 
-            if i % (SMALL_VALUES_TO_DELETE / 10) == 0 {
-                println!("  {:.1}%", i as f64 / SMALL_VALUES_TO_DELETE as f64 * 100.0);
+            for key in key_chunk.iter() {
+                txn.del(dbi, format!("small-{}", key).as_bytes(), None)?;
             }
-        }
-
-        println!("  100.0%");
-
-        Ok(())
-    })?;
+            Ok(())
+        })?;
+    }
+    println!("  100.0%");
     println!();
 
     drop(env);

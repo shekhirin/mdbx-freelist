@@ -91,13 +91,13 @@ fn main() -> eyre::Result<()> {
 
         durations.measure_put(|| {
             with_txn(&env, |txn| {
-                let dbi = txn.open_db(Some(Table::Large.as_str()))?.dbi();
+                let dbi = txn.open_db(Some(Table::Small.as_str()))?.dbi();
 
                 txn.put(
                     dbi,
-                    key.to_be_bytes(),
+                    format!("large-{}", key).as_bytes(),
                     [0; LARGE_VALUE_SIZE],
-                    WriteFlags::APPEND,
+                    WriteFlags::empty(),
                 )?;
 
                 Ok(())

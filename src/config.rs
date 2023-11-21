@@ -1,5 +1,5 @@
-pub const USE_LIFO: bool = true;
-pub const USE_BALLAST: bool = true;
+pub const USE_LIFO: bool = false;
+pub const USE_BALLAST: bool = false;
 
 pub const SMALL_VALUES_TO_INSERT: usize = 5_000_000;
 pub const SMALL_VALUE_SIZE: usize = 2 * 1024;
