@@ -98,6 +98,7 @@ pub fn create_env(path: impl AsRef<Path>) -> eyre::Result<Environment> {
             ..Default::default()
         })
         .set_max_dbs(3)
+        .set_rp_augment_limit(32107)
         .set_flags(EnvironmentFlags {
             liforeclaim: USE_LIFO,
             ..Default::default()
